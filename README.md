@@ -214,9 +214,6 @@ The application has been manually tested for:
 - Error handling and validation
 - Authentication and authorization
 
-## 📄 License
-
-This project is open source and available under the MIT License.
 
 ## 👥 Contributing
 
