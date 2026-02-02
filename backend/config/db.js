@@ -5,15 +5,21 @@ const mongoose = require('mongoose');
  * Uses connection string from environment variables
  */
 const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+  const uri = process.env.MONGODB_URI;
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  if (!uri) {
+    console.error("❌ MONGODB_URI is not set in environment variables!");
+    process.exit(1); // Stop the app immediately if no URI is provided
+  }
+
+  try {
+    console.log("Connecting to MongoDB with URI:", uri);
+
+    await mongoose.connect(uri);
+
+    console.log("✅ MongoDB Connected");
   } catch (error) {
-    console.error(`❌ Error: ${error.message}`);
+    console.error(`❌ MongoDB connection error: ${error.message}`);
     process.exit(1); // Exit process with failure
   }
 };
