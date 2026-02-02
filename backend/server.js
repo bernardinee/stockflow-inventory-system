@@ -9,8 +9,9 @@ const app = express();
 // ✅ CORS configuration
 app.use(cors({
   origin: [
-    'http://localhost:3000', 
-    'https://stockflow-inventory-system.vercel.app'
+    'http://localhost:3000',
+    'https://stockflow-inventory-system.vercel.app',
+    'https://stockflow-inventory-system-clw8337k7.vercel.app'
   ],
   credentials: true
 }));
