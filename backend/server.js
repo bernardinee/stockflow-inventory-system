@@ -1,30 +1,32 @@
 require('dotenv').config();
 const express = require('express');
-const dotenv = require('dotenv');
 const cors = require('cors');
-const connectDB = require('./config/db');
-
-// Load environment variables
-dotenv.config();
-
-// Connect to MongoDB
-connectDB();
+const mongoose = require('mongoose');
 
 // Initialize Express app
 const app = express();
 
 // Middleware
-app.use(cors()); // Enable CORS for frontend
-app.use(express.json()); // Parse JSON request bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Request logging middleware (development)
-if (process.env.NODE_ENV === 'development') {
-  app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`);
-    next();
-  });
+// MongoDB Connection
+const mongoURI = process.env.MONGODB_URI;
+
+if (!mongoURI) {
+  console.error("❌ MONGODB_URI is not set in environment variables!");
+  process.exit(1); // Stop the app if no URI is provided
 }
+
+console.log("Connecting to MongoDB with URI:", mongoURI);
+
+mongoose.connect(mongoURI)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(err => {
+    console.error("❌ MongoDB connection error:", err.message);
+    process.exit(1);
+  });
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -53,7 +55,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// 404 handler - route not found
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -64,7 +66,6 @@ app.use((req, res) => {
 // Global error handler
 app.use((err, req, res, next) => {
   console.error('Global error handler:', err.stack);
-
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal server error',
@@ -74,7 +75,6 @@ app.use((err, req, res, next) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
