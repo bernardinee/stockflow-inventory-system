@@ -6,8 +6,16 @@ const mongoose = require('mongoose');
 // Initialize Express app
 const app = express();
 
+// ✅ CORS configuration
+app.use(cors({
+  origin: [
+    'http://localhost:3000', 
+    'https://stockflow-inventory-system.vercel.app'
+  ],
+  credentials: true
+}));
+
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
