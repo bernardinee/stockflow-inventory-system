@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base API URL - change this to your backend URL
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://stockflow-inventory-system-nvqv.onrender.com/api';
 
 // Create axios instance with default config
 const api = axios.create({
